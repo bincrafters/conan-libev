@@ -42,6 +42,10 @@ class LibevConan(ConanFile):
             if self.settings.os == 'Windows':
                 prefix = tools.unix_path(prefix)
             args = ['--prefix=%s' % prefix]
+            if self.options.shared:
+                args.extend(['--disable-static', '--enable-shared'])
+            else:
+                args.extend(['--disable-shared', '--enable-static'])
             env_build.configure(args=args)
             env_build.make()
             env_build.make(args=['install'])
