@@ -13,7 +13,7 @@ class LibevConan(ConanFile):
     url = "https://github.com/bincrafters/conan-libev"
     homepage = "http://software.schmorp.de/pkg/libev.html"
     author = "Bincrafters <bincrafters@gmail.com>"
-    license = "BSD-2-Clause"
+    license = ["BSD-2-Clause", "GPL-2.0-or-later"]
     exports = ["LICENSE.md"]
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False], "fPIC": [True, False]}
@@ -33,6 +33,7 @@ class LibevConan(ConanFile):
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
             raise ConanInvalidConfiguration("libev is not supported by Visual Studio")
         if self.settings.os == "Windows" and self.options.shared:
+            # libtool:   error: can't build i686-pc-mingw32 shared library unless -no-undefined is specified
             raise ConanInvalidConfiguration("libev can't be built as shared on Windows")
 
     def source(self):
