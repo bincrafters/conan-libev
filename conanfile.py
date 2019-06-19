@@ -3,31 +3,33 @@
 from conans import ConanFile, AutoToolsBuildEnvironment, tools
 from conans.errors import ConanInvalidConfiguration
 import os
-import shutil
 
 
 class LibevConan(ConanFile):
     name = "libev"
     version = "4.25"
     description = "A full-featured and high-performance event loop that is loosely modelled after libevent"
-    topics = ("conan", "event")
+    topics = ("conan", "event", "libev", "event-loop", "periodic-timer", "notify")
     url = "https://github.com/bincrafters/conan-libev"
     homepage = "http://software.schmorp.de/pkg/libev.html"
     author = "Bincrafters <bincrafters@gmail.com>"
-    license = "http://cvs.schmorp.de/libev/LICENSE"
+    license = "BSD-2-Clause"
     exports = ["LICENSE.md"]
-
     settings = "os", "arch", "compiler", "build_type"
-    options = {"shared": [True, False],
-               "fPIC": [True, False]}
-    default_options = {"shared": False,
-                       "fPIC": True}
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = {"shared": False, "fPIC": True}
+    _autotools = None
 
-    _source_subfolder = "source_subfolder"
+    @property
+    def _source_subfolder(self):
+        return "source_subfolder"
+
+    def config_options(self):
+        if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
+            raise ConanInvalidConfiguration("libev is not supported by Visual Studio")
 
     def configure(self):
-        if self.settings.compiler == 'Visual Studio':
-            raise ConanInvalidConfiguration("MSVC is not supported")
+        del self.settings.compiler.libcxx
 
     def source(self):
         checksum = "78757e1c27778d2f3795251d9fe09715d51ce0422416da4abb34af3929c02589"
@@ -35,28 +37,31 @@ class LibevConan(ConanFile):
         extracted_folder = "libev-{0}".format(self.version)
         os.rename(extracted_folder, self._source_subfolder)
 
-    def build(self):
-        prefix = os.path.abspath(self.package_folder)
-        with tools.chdir(self._source_subfolder):
-            env_build = AutoToolsBuildEnvironment(self)
-            if self.settings.os == 'Windows':
-                prefix = tools.unix_path(prefix)
-            args = ['--prefix=%s' % prefix]
+    def _configure_autotools(self):
+        if not self._autotools:
+            self._autotools = AutoToolsBuildEnvironment(self)
+            args = []
             if self.options.shared:
                 args.extend(['--disable-static', '--enable-shared'])
             else:
                 args.extend(['--disable-shared', '--enable-static'])
-            env_build.configure(args=args)
-            env_build.make()
-            env_build.make(args=['install'])
+            self._autotools.configure(configure_dir=self._source_subfolder, args=args)
+        return self._autotools
+
+    def build(self):
+        autotools = self._configure_autotools()
+        autotools.make()
 
     def package(self):
-        self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
-        # remove unneeded directories
-        shutil.rmtree(os.path.join(self.package_folder, 'share', 'man'), ignore_errors=True)
+        self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
+        autotools = self._configure_autotools()
+        autotools.install()
+        tools.rmdir(os.path.join(self.package_folder, 'share'))
         la_file = os.path.join(self.package_folder, "lib", "libev.la")
         if os.path.isfile(la_file):
             os.unlink(la_file)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
+        if self.settings.os == "Linux":
+            self.cpp_info.libs.append("m")
