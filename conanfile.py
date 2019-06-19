@@ -24,11 +24,10 @@ class LibevConan(ConanFile):
                        "fPIC": True}
 
     _source_subfolder = "source_subfolder"
-    _build_subfolder = "build_subfolder"
 
-    def config_options(self):
+    def configure(self):
         if self.settings.compiler == 'Visual Studio':
-            raise ConanInvalidConfiguration("Windows is not supported")
+            raise ConanInvalidConfiguration("MSVC is not supported")
 
     def source(self):
         checksum = "78757e1c27778d2f3795251d9fe09715d51ce0422416da4abb34af3929c02589"
