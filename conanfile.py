@@ -54,6 +54,9 @@ class LibevConan(ConanFile):
         self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
         # remove unneeded directories
         shutil.rmtree(os.path.join(self.package_folder, 'share', 'man'), ignore_errors=True)
+        la_file = os.path.join(self.package_folder, "lib", "libev.la")
+        if os.path.isfile(la_file):
+            os.unlink(la_file)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
