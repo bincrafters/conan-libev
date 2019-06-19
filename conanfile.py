@@ -25,11 +25,15 @@ class LibevConan(ConanFile):
         return "source_subfolder"
 
     def config_options(self):
-        if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
-            raise ConanInvalidConfiguration("libev is not supported by Visual Studio")
+        if self.settings.os == "Windows":
+            del self.options.fPIC
 
     def configure(self):
         del self.settings.compiler.libcxx
+        if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
+            raise ConanInvalidConfiguration("libev is not supported by Visual Studio")
+        if self.settings.os == "Windows" and self.options.shared:
+            raise ConanInvalidConfiguration("libev can't be built as shared on Windows")
 
     def source(self):
         checksum = "78757e1c27778d2f3795251d9fe09715d51ce0422416da4abb34af3929c02589"
@@ -39,7 +43,7 @@ class LibevConan(ConanFile):
 
     def _configure_autotools(self):
         if not self._autotools:
-            self._autotools = AutoToolsBuildEnvironment(self)
+            self._autotools = AutoToolsBuildEnvironment(self, win_bash=tools.os_info.is_windows)
             args = []
             if self.options.shared:
                 args.extend(['--disable-static', '--enable-shared'])
@@ -65,3 +69,5 @@ class LibevConan(ConanFile):
         self.cpp_info.libs = tools.collect_libs(self)
         if self.settings.os == "Linux":
             self.cpp_info.libs.append("m")
+        elif self.settings.os == "Windows":
+            self.cpp_info.libs.append("Ws2_32")
