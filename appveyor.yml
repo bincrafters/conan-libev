@@ -2,7 +2,7 @@ build: false
 
 environment:
     PYTHON_HOME: "C:\\Python37"
-    CONAN_MAKE_PROGRAM: "C:\\tools\\mingw64\\bin\\mingw32-make.exe"
+    CONAN_MAKE_PROGRAM: "C:/tools/mingw64/bin/mingw32-make.exe"
 
     matrix:
         - MINGW_CONFIGURATIONS: "4.9@x86_64@seh@posix"
