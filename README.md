@@ -1,8 +1,8 @@
 ## Package Status
 
-| Bintray | Linux & macOS |
-|:--------:|:-----------------:|
-|[![Download](https://api.bintray.com/packages/bincrafters/public-conan/conan-libev%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/libev%3Abincrafters/_latestVersion)|[![Build Status](https://travis-ci.com/bincrafters/conan-libev.svg)](https://travis-ci.com/bincrafters/conan-libev)|
+| Bintray | Windows | Linux & macOS |
+|:--------:|:---------:|:-----------------:|
+|[![Download](https://api.bintray.com/packages/bincrafters/public-conan/libev%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/libev%3Abincrafters/_latestVersion)|[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-libev?svg=true)](https://ci.appveyor.com/project/bincrafters/conan-libev)|[![Build Status](https://travis-ci.com/bincrafters/conan-libev.svg)](https://travis-ci.com/bincrafters/conan-libev)|
 
 ## Conan Information
 
