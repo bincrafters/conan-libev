@@ -37,7 +37,7 @@ class LibevConan(ConanFile):
             raise ConanInvalidConfiguration("libev can't be built as shared on Windows")
 
     def source(self):
-        checksum = "78757e1c27778d2f3795251d9fe09715d51ce0422416da4abb34af3929c02589"
+        checksum = "2d5526fc8da4f072dd5c73e18fbb1666f5ef8ed78b73bba12e195cfdd810344e"
         tools.get("http://dist.schmorp.de/libev/Attic/libev-{}.tar.gz".format(self.version), sha256=checksum)
         extracted_folder = "libev-{0}".format(self.version)
         os.rename(extracted_folder, self._source_subfolder)
