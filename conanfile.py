@@ -7,7 +7,7 @@ import os
 
 class LibevConan(ConanFile):
     name = "libev"
-    version = "4.25"
+    version = "4.27"
     description = "A full-featured and high-performance event loop that is loosely modelled after libevent"
     topics = ("conan", "event", "libev", "event-loop", "periodic-timer", "notify")
     url = "https://github.com/bincrafters/conan-libev"
