@@ -38,7 +38,7 @@ class LibevConan(ConanFile):
 
     def source(self):
         checksum = "78757e1c27778d2f3795251d9fe09715d51ce0422416da4abb34af3929c02589"
-        tools.get("http://dist.schmorp.de/libev/libev-{}.tar.gz".format(self.version), sha256=checksum)
+        tools.get("http://dist.schmorp.de/libev/Attic/libev-{}.tar.gz".format(self.version), sha256=checksum)
         extracted_folder = "libev-{0}".format(self.version)
         os.rename(extracted_folder, self._source_subfolder)
 
